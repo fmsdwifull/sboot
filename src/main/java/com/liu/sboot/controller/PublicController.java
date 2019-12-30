@@ -5,10 +5,7 @@ import com.liu.sboot.model.User;
 import com.liu.sboot.service.PublicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,5 +45,17 @@ public class PublicController {
     public String home()
     {
         return "home/list";
+    }
+
+    @GetMapping("/admin/{path}")
+    public String admin(@PathVariable("path") String path)
+    {
+        return "admin/"+path;
+    }
+
+    @GetMapping("/user/{path}")
+    public String user(@PathVariable("path") String path)
+    {
+        return "user/"+path;
     }
 }
