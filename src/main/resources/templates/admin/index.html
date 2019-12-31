@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -10,6 +12,11 @@
 </form>
 <br>
 this is admin
-
+Logged user: <span sec:authentication="name">Bob</span>
+<br/>
+<h1>欢迎光临
+    当前登陆账号:<label th:text="${name}"></label>
+    通过标签设置：:<label sec:authentication="name"></label>
+</h1>
 </body>
 </html>

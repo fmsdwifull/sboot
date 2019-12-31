@@ -9,7 +9,7 @@ Roles: <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]<
 <div sec:authorize="isAuthenticated()">
     <p>已登录</p>
     <p>登录名1：<span sec:authentication="name"></span></p>
-    <p>登录名：<span sec:authentication="principal.username"></span></p>
+    <p>登录名2：<span sec:authentication="principal.username"></span></p>
     <p>Password：<span sec:authentication="principal.password"></span></p>
     <div sec:authentication="principal.authorities"></div> <!-- works fine -->
     <p>拥有的角色：
