@@ -5,16 +5,17 @@
 </head>
 <body>
 Logged user: <span sec:authentication="name">Bob</span>
-Roles: <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>
+
 <div sec:authorize="isAuthenticated()">
+    Roles: <span sec:authentication="principal.authorities">[ROLE_user, ROLE_admin]</span>
     <p>已登录</p>
     <p>登录名1：<span sec:authentication="name"></span></p>
     <p>登录名2：<span sec:authentication="principal.username"></span></p>
     <p>Password：<span sec:authentication="principal.password"></span></p>
     <div sec:authentication="principal.authorities"></div> <!-- works fine -->
     <p>拥有的角色：
-        <span sec:authorize="hasRole('admin')">管理员</span>
-        <span sec:authorize="hasRole('user')">用户</span>
+        <span sec:authorize="hasRole('Role_admin')">管理员</span>
+        <span sec:authorize="hasRole('Role_user')">用户</span>
     </p>
 </div>
 <div sec:authorize="isAuthenticated()"><p>未登录</p></div>

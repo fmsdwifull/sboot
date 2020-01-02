@@ -1,6 +1,6 @@
-<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,6 +8,10 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
+    <sec:csrfMetaTags />
+    <meta name="_csrf_parameter" th:content="_csrf" />
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link rel="icon" href="../../favicon.ico">
     <title>Signin Template for Bootstrap</title>
     <link rel="stylesheet" href="\assets\css\bootstrap.min.css">
@@ -21,14 +25,20 @@
 <div class="container">
     <div style="text-align: center"> <h2 class="form-signin-heading">请登录</h2></div>
 
-    <form class="form-signin" id="login">
+    <form class="form-signin"  th:action="@{/public/login}"  method="post" id="login">
 
         <label for="userName" class="sr-only">账号</label>
         <input type="text" id="userName" name="userName" class="form-control" placeholder="请输入账号" required autofocus><br/>
         <label for="inputPassword" class="sr-only">密码</label>
         <input type="password" id="passWord"  name="passWord" class="form-control" placeholder="请输入密码" required>
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+<!--
         <input type="button"  class="btn btn-lg btn-primary btn-block" value="登陆" onclick="loginSubmit()"  >
+
+-->
+        <p   style="color: red" th:if="${param.error}" th:text="密码或用户名错误" ></p>
+
+        <input type="submit"  class="btn btn-lg btn-primary btn-block" value="登陆"  >
     </form>
 </div> <!-- /container -->
 </body>
@@ -36,16 +46,23 @@
         function loginSubmit()
         {
             //这里提交的时候，实际上为什么是get方式
-            var header = $("meta[name='_csrf_header']").attr("content");
-            var token = $("meta[name='_csrf']").attr("content");
+            //var header = $("meta[name='_csrf_header']").attr("content");
+            //var token = $("meta[name='_csrf']").attr("content");
+            var csrfParameter = $("meta[name='_csrf_parameter']").attr("content");
+            var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+            var csrfToken = $("meta[name='_csrf']").attr("content");
+            var data = {};
+            data[csrfParameter] = csrfToken;
+            data["userName"] = $("#userName").val();
+            data["passWord"] = $("#passWord").val();
+            alert(csrfParameter);
             $.ajax({
                 type:'POST',
                 dataType:'json',
-                url:'doLogin',
-                data:$('#login').serialize(),
-                //beforeSend: function(xhr){
-                //    xhr.setRequestHeader(header, token);
-                //},
+                //url:'doLogin',
+                url:"/public/login",
+                data:data,
+                //data:$('#login').serialize(),
                 success: function (result) {
                     if (result.resultCode == '200') {
                         //向世界问个好
@@ -56,6 +73,9 @@
                         window.location.href="home";  //这里为什么没有跳转
                     }
                 },
+                //beforeSend: function(xhr){
+                 //   xhr.setRequestHeader(header, token);
+                //},
                 error : function() {
                     //alert('登陆异常');
                     layer.msg('登陆异常');

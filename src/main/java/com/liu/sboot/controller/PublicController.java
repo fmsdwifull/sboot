@@ -6,8 +6,10 @@ import com.liu.sboot.service.PublicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -56,14 +60,61 @@ public class PublicController {
     }
 
     @GetMapping("/admin/{path}")
+    //public String admin(@PathVariable("path") String path)
     public String admin(@PathVariable("path") String path, HttpServletRequest request)
     //public String admin(@PathVariable("path") String path, Model model)
     {
+
+
+//获取session
+        HttpSession   session   =   request.getSession();
+        session.setAttribute("k1","v1----");
+        System.out.print("---------->"+session.getAttribute("k1"));
+
+
+        SecurityContextImpl securityContextImpl = (SecurityContextImpl) request
+                .getSession().getAttribute("SPRING_SECURITY_CONTEXT");
+// 登录名
+        System.out.println("Username:"
+                + securityContextImpl.getAuthentication().getName());
+// 登录密码，未加密的
+        System.out.println("Credentials:"
+                + securityContextImpl.getAuthentication().getCredentials());
+        WebAuthenticationDetails details = (WebAuthenticationDetails) securityContextImpl
+                .getAuthentication().getDetails();
+// 获得访问地址
+        System.out.println("RemoteAddress" + details.getRemoteAddress());
+// 获得sessionid
+        System.out.println("SessionId" + details.getSessionId());
+// 获得当前用户所拥有的权限
+        List<GrantedAuthority> authorities = (List<GrantedAuthority>) securityContextImpl
+                .getAuthentication().getAuthorities();
+        for (GrantedAuthority grantedAuthority : authorities) {
+            System.out.println("Authority" + grantedAuthority.getAuthority());
+
+
+        }
+
+
+
+        // 获取session中所有的键值
+        Enumeration<String> attrs = session.getAttributeNames();
+// 遍历attrs中的
+        while(attrs.hasMoreElements()) {
+// 获取session键值
+            String name = attrs.nextElement().toString();
+            // 根据键值取session中的值
+            Object vakue = session.getAttribute(name);
+
+            // 打印结果
+            System.out.println("------" + name + ":" + vakue + "--------\n");
+
+        }
 //        HttpSession session=request.getSession();//获取session并将userName存入session对象
 //        session.setAttribute("name", session.getAttribute("username"));
 //        System.out.print("----1-->"+session.getAttribute("username"));
 //        System.out.print("---2--->"+ session.getAttributeNames());
-       // Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
          //model.addAttribute("name",principal.toString());
         //SecurityContextImpl
@@ -87,7 +138,7 @@ public class PublicController {
             System.out.print(user);
         }
         */
-        Object obj=request.getSession().getAttribute("username");
+        //Object obj=request.getSession().getAttribute("username");
         return "admin/"+path;
     }
 
@@ -97,4 +148,5 @@ public class PublicController {
     {
         return "user/"+path;
     }
+
 }
