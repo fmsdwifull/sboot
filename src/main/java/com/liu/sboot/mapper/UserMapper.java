@@ -27,4 +27,7 @@ public interface UserMapper {
 
     @Update("update sys_user set username=#{username} where id=#{id}")
     public int update(Integer id);
+
+    @Select("select * from sys_user where username = #{userName}")
+    public User getUserByName();
 }
