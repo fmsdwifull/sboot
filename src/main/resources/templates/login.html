@@ -8,17 +8,19 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
+    <!--
     <sec:csrfMetaTags />
     <meta name="_csrf_parameter" th:content="_csrf" />
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    -->
     <link rel="icon" href="../../favicon.ico">
     <title>Signin Template for Bootstrap</title>
     <link rel="stylesheet" href="\assets\css\bootstrap.min.css">
     <link rel="stylesheet" href="\assets\css\signin.css">
 
-    <script  src="\assets\js\bootstrap.min.js"></script>
     <script  src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script  src="\assets\js\bootstrap.min.js"></script>
     <![endif]-->
 </head>
 <body>
@@ -29,58 +31,60 @@
 
         <label for="userName" class="sr-only">账号</label>
         <input type="text" id="userName" name="userName" class="form-control" placeholder="请输入账号" required autofocus><br/>
-        <label for="inputPassword" class="sr-only">密码</label>
+        <label  class="sr-only">密码</label>
         <input type="password" id="passWord"  name="passWord" class="form-control" placeholder="请输入密码" required>
+        <!--
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-<!--
-        <input type="button"  class="btn btn-lg btn-primary btn-block" value="登陆" onclick="loginSubmit()"  >
+        -->
+        <!--
+                <input type="button"  class="btn btn-lg btn-primary btn-block" value="登陆" onclick="loginSubmit()"  >
 
--->
+        -->
         <p   style="color: red" th:if="${param.error}" th:text="密码或用户名错误" ></p>
 
         <input type="submit"  class="btn btn-lg btn-primary btn-block" value="登陆"  >
     </form>
 </div> <!-- /container -->
 </body>
-    <script>
-        function loginSubmit()
-        {
-            //这里提交的时候，实际上为什么是get方式
-            //var header = $("meta[name='_csrf_header']").attr("content");
-            //var token = $("meta[name='_csrf']").attr("content");
-            var csrfParameter = $("meta[name='_csrf_parameter']").attr("content");
-            var csrfHeader = $("meta[name='_csrf_header']").attr("content");
-            var csrfToken = $("meta[name='_csrf']").attr("content");
-            var data = {};
-            data[csrfParameter] = csrfToken;
-            data["userName"] = $("#userName").val();
-            data["passWord"] = $("#passWord").val();
-            alert(csrfParameter);
-            $.ajax({
-                type:'POST',
-                dataType:'json',
-                //url:'doLogin',
-                url:"/public/login",
-                data:data,
-                //data:$('#login').serialize(),
-                success: function (result) {
-                    if (result.resultCode == '200') {
-                        //向世界问个好
-                        alert('账号或密码错误');
-                        //alert('账号或密码错误');
-                    }else if(result.resultCode == '100')//wo x '100'写 成'100"了
-                    {
-                        window.location.href="home";  //这里为什么没有跳转
-                    }
-                },
-                //beforeSend: function(xhr){
-                 //   xhr.setRequestHeader(header, token);
-                //},
-                error : function() {
-                    //alert('登陆异常');
-                    layer.msg('登陆异常');
+<script>
+    function loginSubmit()
+    {
+        //这里提交的时候，实际上为什么是get方式
+        //var header = $("meta[name='_csrf_header']").attr("content");
+        //var token = $("meta[name='_csrf']").attr("content");
+        //var csrfParameter = $("meta[name='_csrf_parameter']").attr("content");
+        //// var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        //var csrfToken = $("meta[name='_csrf']").attr("content");
+        var data = {};
+        data[csrfParameter] = csrfToken;
+        data["userName"] = $("#userName").val();
+        data["passWord"] = $("#passWord").val();
+        alert(csrfParameter);
+        $.ajax({
+            type:'POST',
+            dataType:'json',
+            //url:'doLogin',
+            url:"/public/login",
+            data:data,
+            //data:$('#login').serialize(),
+            success: function (result) {
+                if (result.resultCode == '200') {
+                    //向世界问个好
+                    alert('账号或密码错误');
+                    //alert('账号或密码错误');
+                }else if(result.resultCode == '100')//wo x '100'写 成'100"了
+                {
+                    window.location.href="home";  //这里为什么没有跳转
                 }
-            });
-        }
-    </script>
+            },
+            //beforeSend: function(xhr){
+            //   xhr.setRequestHeader(header, token);
+            //},
+            error : function() {
+                //alert('登陆异常');
+                layer.msg('登陆异常');
+            }
+        });
+    }
+</script>
 </html>

@@ -8,11 +8,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Service
 public class CustomUserService  implements UserDetailsService {
     @Autowired
     UserMapper userMapper;
@@ -20,7 +22,7 @@ public class CustomUserService  implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         UserDetails userDetails = null;
-        User user = userMapper.getUserByName();
+        User user = userMapper.getUserByName(s);
         try {
             Collection<GrantedAuthority> authList = getAuthorities();
             userDetails = new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassWord(), authList);
@@ -36,8 +38,8 @@ public class CustomUserService  implements UserDetailsService {
      */
     private Collection<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authList = new ArrayList<GrantedAuthority>();
-        authList.add(new SimpleGrantedAuthority("ROLE_USER"));
-        authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        authList.add(new SimpleGrantedAuthority("ROLE_admin"));
+        authList.add(new SimpleGrantedAuthority("ROLE_user"));
         return authList;
     }
 }

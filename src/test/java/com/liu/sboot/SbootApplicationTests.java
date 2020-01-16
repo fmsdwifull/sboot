@@ -1,5 +1,7 @@
 package com.liu.sboot;
 
+import com.liu.sboot.mapper.UserMapper;
+import com.liu.sboot.service.CustomUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,13 +16,17 @@ class SbootApplicationTests {
     @Autowired
     DataSource dataSource;
     //DataSource dataSource;
+    @Autowired
+    UserMapper userMapper;
 
     @Test
     void contextLoads() throws SQLException {
-        System.out.print("---->"+dataSource.getClass());
+
+ /*
         Connection connection = dataSource.getConnection();
         System.out.print(connection);
-        connection.close();
+        connection.close();*/
+        System.out.print("--iiiiiiiiiiiiiiiiiiiiiiiiiiiiii-->"+userMapper.getUserByName("admin"));
     }
 
 }

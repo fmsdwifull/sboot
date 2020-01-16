@@ -29,5 +29,5 @@ public interface UserMapper {
     public int update(Integer id);
 
     @Select("select * from sys_user where username = #{userName}")
-    public User getUserByName();
+    public User getUserByName(String userName);
 }
