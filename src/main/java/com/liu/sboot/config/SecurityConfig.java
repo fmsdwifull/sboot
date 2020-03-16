@@ -1,13 +1,19 @@
 package com.liu.sboot.config;
-
+import com.liu.sboot.service.MyInvocationSecurityMetadataSourceService;
+import com.liu.sboot.service.MyAccessDecisionManager;
 import com.liu.sboot.service.CustomUserService;
 import com.liu.sboot.service.MyFilterSecurityInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 @EnableWebSecurity
@@ -15,26 +21,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     CustomUserService customUserService;
 
-    @Autowired
+    //@Autowired
     //FilterSecurityInterceptor myFilterSecurityInterceptor;
-    MyFilterSecurityInterceptor myFilterSecurityInterceptor;
+    //MyFilterSecurityInterceptor myFilterSecurityInterceptor;
 
+    //MyInvocationSecurityMetadataSourceService securityMetadataSource = new MyInvocationSecurityMetadataSourceService();
+
+    @Autowired
+    private MyInvocationSecurityMetadataSourceService securityMetadataSource;
+
+    /*
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //super.configure(http);
-        //http.csrf().disable();
-/*       为什么用这段代码js会出现异常，？？？
-          http.authorizeRequests()
-                .anyRequest().authenticated() //任何请求,登录后可以访问
-                .and()
-                .formLogin()
-                //.loginPage("/public/login").permitAll()
-                .usernameParameter("userName").passwordParameter("passWord").loginPage("/public/login")
-                .permitAll() //登录页面用户任意访问
-                .and()
-                .logout().permitAll(); //注销行为任意访问
-        http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)
-                .csrf().disable();*/
 
        http.csrf().ignoringAntMatchers("/druid/*");
         http.authorizeRequests().antMatchers("/").permitAll();
@@ -46,25 +45,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //http.logout().logoutSuccessUrl("/url");
        http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
     }
+    */
+
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests()
+                .anyRequest().authenticated()//ObjectPostProcessor
+                .withObjectPostProcessor(new  ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    public <O extends FilterSecurityInterceptor> O postProcess(
+                            O fsi) {
+                        fsi.setSecurityMetadataSource(mySecurityMetadataSource());
+                        fsi.setAccessDecisionManager(myAccessDecisionManager());
+                        return fsi;
+                    }
+                });
+    }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         //super.configure(auth);
         auth.userDetailsService(customUserService).passwordEncoder(new BCryptPasswordEncoder());
-
-        /*
-        auth
-                .jdbcAuthentication()
-                .dataSource(dataSource)
-                .withDefaultSchema()
-                .withUser("user").password("password").roles("USER").and()
-                .withUser("admin").password("password").roles("USER", "ADMIN");
-         */
-                //.withUser("admin").password(new BCryptPasswordEncoder().encode("123456")).roles("admin")
-//         auth.inMemoryAuthentication().
-//                passwordEncoder(new BCryptPasswordEncoder())
-//                .withUser("admin").password(new BCryptPasswordEncoder().encode("123456")).roles("admin")
-//                        .and()
-//                .withUser("user").password(new BCryptPasswordEncoder().encode("123456")).roles("user");
     }
+
+
+
+    @Bean //MyFilterInvocationSecurityMetadataSource
+    public FilterInvocationSecurityMetadataSource mySecurityMetadataSource() {
+        //MyInvocationSecurityMetadataSourceService securityMetadataSource = new MyInvocationSecurityMetadataSourceService();
+        return securityMetadataSource;
+    }
+
+    @Bean //AccessDecisionManager
+    public AccessDecisionManager myAccessDecisionManager() {
+        return new MyAccessDecisionManager();
+    }
+
 }
