@@ -30,4 +30,7 @@ public interface UserMapper {
 
     @Select("select * from sys_user where username = #{userName}")
     public User getUserByName(String userName);
+
+    @Select("select * from sys_user where username = #{username} and password=#{password}")
+    public User getUserByPermiss(@Param("username") String username,@Param("password") String password);
 }

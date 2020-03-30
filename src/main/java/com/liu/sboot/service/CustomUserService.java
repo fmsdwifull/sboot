@@ -1,6 +1,8 @@
 package com.liu.sboot.service;
 
+import com.liu.sboot.mapper.RoleMapper;
 import com.liu.sboot.mapper.UserMapper;
+import com.liu.sboot.model.Role;
 import com.liu.sboot.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,11 +20,17 @@ import java.util.List;
 public class CustomUserService  implements UserDetailsService {
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    RoleMapper roleMapper;
+    //@Autowired
+    //Role role;
+    private User user;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         UserDetails userDetails = null;
-        User user = userMapper.getUserByName(s);
+        //System.out.print(userMapper+"33333333333333333----");
+        user = userMapper.getUserByName(s);
         try {
             Collection<GrantedAuthority> authList = getAuthorities();
             userDetails = new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassWord(), authList);
@@ -38,8 +46,15 @@ public class CustomUserService  implements UserDetailsService {
      */
     private Collection<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authList = new ArrayList<GrantedAuthority>();
-        authList.add(new SimpleGrantedAuthority("ROLE_admin"));
-        authList.add(new SimpleGrantedAuthority("ROLE_user"));
+
+        //查roles，根据userid对应的roleid
+        List<Role> role = roleMapper.getRoleById(user.getId());
+        for (Role ro:role)
+        {
+            authList.add(new SimpleGrantedAuthority(ro.getRoleName()));
+        }
+        //authList.add(new SimpleGrantedAuthority("ROLE_admin"));
+        //authList.add(new SimpleGrantedAuthority("ROLE_user"));
         return authList;
     }
 }

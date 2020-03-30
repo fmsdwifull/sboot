@@ -6,13 +6,9 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
 
-import javax.servlet.http.HttpServletRequest;
-import java.security.Permission;
 import java.util.*;
 // fang jing le rongqi ,why invove it? where pointcut?
 @Service
@@ -20,14 +16,14 @@ import java.util.*;
 public class MyInvocationSecurityMetadataSourceService  implements
         FilterInvocationSecurityMetadataSource {
 
-
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     private final Map<String,String> urlRoleMap = new HashMap<String,String>(){{
-        put("/open/**","ROLE_ANONYMOUS");
-        put("/health","ROLE_ANONYMOUS");
-        put("/restart","ROLE_ADMIN");
-        put("/demo","ROLE_USER");
+        //List<Perm>  role = permissionMapper.getPermissionAndRole();
+        put("/open/**","root");
+        put("/health","root");
+        put("/restart","admin");
+        put("/demo","user");
     }};
 
     /*
