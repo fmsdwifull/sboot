@@ -89,10 +89,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return securityMetadataSource;
     }
 
-    @Bean //AccessDecisionManager
-    public AccessDecisionManager myAccessDecisionManager() {
-        return new MyAccessDecisionManager();
-    }
+    //@Bean //AccessDecisionManager
+    //public AccessDecisionManager myAccessDecisionManager() {
+    //    return new MyAccessDecisionManager();
+    //}
 
     @Bean
     public PasswordEncoder passwordEncoder()
