@@ -17,8 +17,8 @@ import java.util.ArrayList;
 @Service
 //@Component
 public class CustomUsernamePasswordAuthentionProvider  implements AuthenticationProvider {
-    @Autowired
-    UserMapper userMapper;
+    @Autowired(required=false)
+    private  UserMapper userMapper;
     @Autowired
     private CustomUserService userDetailsService;
 
@@ -30,8 +30,10 @@ public class CustomUsernamePasswordAuthentionProvider  implements Authentication
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         //String dbuser = "lisi";
         //String dbpwd = "234";
-        User user = userMapper.getUserByPermiss(username,password);
-        if(user!=null)
+        //User user = userMapper.getUserByPermiss(username,password);
+        System.out.print("------------------------------"+userDetails.getPassword());
+        if(userDetails.getPassword().equals(password))
+        //if(user!=null)
         //if(username.equals(dbuser)&password.equals(dbpwd))
         {
             return new UsernamePasswordAuthenticationToken(username,password,userDetails.getAuthorities());
