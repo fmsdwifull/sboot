@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 @Service // org.springframework.security.access.AccessDecisionManager
 public class MyAccessDecisionManager implements AccessDecisionManager {
+
     // decide 方法是判定是否拥有权限的决策方法，
     //authentication 是释CustomUserService中循环添加到 GrantedAuthority 对象中的权限信息集合.
     //object 包含客户端发起的请求的requset信息，可转换为 HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
@@ -46,6 +47,9 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
                        Collection<ConfigAttribute> configAttributes)
             throws AccessDeniedException, InsufficientAuthenticationException {
         //这段代码其实不需要,因为spring-security-core-4.1.4.RELEASE-sources.jar!/org/springframework/security/access/intercept/AbstractSecurityInterceptor.java第215行判断提前返回了,不会进入decide方法
+        if(null== configAttributes || configAttributes.size() <=0) {
+            return;
+        }
         if (CollectionUtils.isEmpty(configAttributes)) {
             throw new AccessDeniedException("not allow");
         }

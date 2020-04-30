@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liu.sboot.mapper.RoleMapper">
+    <select id="getRoleById" resultType="com.liu.sboot.model.Role">
+         select sys_role.* from sys_role,sys_user_role
+         where
+           sys_user_role.user_id=#{id} and
+            sys_user_role.role_id=sys_role.id
+    </select>
+
+    <select id="getRoleByUrl" resultType="com.liu.sboot.model.Role">
+         select sys_role.rolename from sys_role
+         join sys_role_permission
+         on sys_role.id = sys_role_permission.role_id
+         join sys_permission
+         on sys_permission.url=#{url}
+         GROUP BY sys_role.rolename
+    </select>
+</mapper>

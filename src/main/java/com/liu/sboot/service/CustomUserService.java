@@ -37,6 +37,7 @@ public class CustomUserService  implements UserDetailsService {
         }catch (Exception e) {
             e.printStackTrace();
         }
+        //这里最终返回的是用户信息，和角色信息
         return userDetails;
     }
 

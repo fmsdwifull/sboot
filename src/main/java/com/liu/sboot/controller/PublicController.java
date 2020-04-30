@@ -59,6 +59,7 @@ public class PublicController {
         return "home/list";
     }
 
+
     @GetMapping("/admin/{path}")
     //public String admin(@PathVariable("path") String path)
     public String admin(@PathVariable("path") String path, HttpServletRequest request)

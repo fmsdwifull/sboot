@@ -31,9 +31,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //MyInvocationSecurityMetadataSourceService securityMetadataSource = new MyInvocationSecurityMetadataSourceService();
 
     @Autowired
-    private MyInvocationSecurityMetadataSourceService securityMetadataSource;
-
-
+    private MyInvocationSecurityMetadataSourceService myInvocationSecurityMetadataSourceService;
+    @Autowired
+    private MyAccessDecisionManager myAccessDecisionManager;
+/*
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //super.configure(http);
@@ -55,23 +56,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //http.logout().logoutSuccessUrl("/url");
        ///http.addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
     }
+    */
 
- /*
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
-        http
+
+
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers( "/public/login").permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                //.loginPage("/public/login").defaultSuccessUrl("/public/admin/index").usernameParameter("userName").passwordParameter("passWord").permitAll().and().logout().permitAll()
+        .formLogin().defaultSuccessUrl("/public/admin/index",true).usernameParameter("userName").passwordParameter("passWord").loginPage("/public/login")
+
+                //.formLogin().loginPage("/public/login").defaultSuccessUrl("/public/admin/index").permitAll().and().logout().permitAll()
+                .and()
                 .authorizeRequests()
-                .anyRequest().authenticated()//ObjectPostProcessor
-                .withObjectPostProcessor(new  ObjectPostProcessor<FilterSecurityInterceptor>() {
-                    public <O extends FilterSecurityInterceptor> O postProcess(
-                            O fsi) {
-                        fsi.setSecurityMetadataSource(mySecurityMetadataSource());
-                        fsi.setAccessDecisionManager(myAccessDecisionManager());
+                //.anyRequest()
+                //.authenticated()
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    public <O extends FilterSecurityInterceptor> O postProcess(O fsi) {
+                        fsi.setAccessDecisionManager(myAccessDecisionManager);
+                        fsi.setSecurityMetadataSource(myInvocationSecurityMetadataSourceService);
                         return fsi;
                     }
                 });
     }
- */
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -83,11 +92,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
 
-    @Bean //MyFilterInvocationSecurityMetadataSource
-    public FilterInvocationSecurityMetadataSource mySecurityMetadataSource() {
-        //MyInvocationSecurityMetadataSourceService securityMetadataSource = new MyInvocationSecurityMetadataSourceService();
-        return securityMetadataSource;
-    }
+//    @Bean
+//    public FilterInvocationSecurityMetadataSource mySecurityMetadataSource() {
+//        //MyInvocationSecurityMetadataSourceService securityMetadataSource = new MyInvocationSecurityMetadataSourceService();
+//        return securityMetadataSource;
+//    }
 
     //@Bean //AccessDecisionManager
     //public AccessDecisionManager myAccessDecisionManager() {

@@ -14,4 +14,7 @@ public interface RoleMapper {
 
     @Select("select * from sys_role")
     public List<Role> getAllRole();
+
+    //select sys_role.* from sys_role  join sys_role_permission on sys_role.id = sys_role_permission.role_id  join sys_permission on sys_permission.url='/play' GROUP BY sys_role.rolename
+    public List<Role> getRoleByUrl(String url);
 }
