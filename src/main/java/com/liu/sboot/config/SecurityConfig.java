@@ -61,13 +61,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers( "/public/login").permitAll()
+        http.authorizeRequests()
+               // .antMatchers( "/public/login").permitAll()
+                .antMatchers( "/assets/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
                 //.loginPage("/public/login").defaultSuccessUrl("/public/admin/index").usernameParameter("userName").passwordParameter("passWord").permitAll().and().logout().permitAll()
-        .formLogin().defaultSuccessUrl("/public/admin/index",true).usernameParameter("userName").passwordParameter("passWord").loginPage("/public/login")
-
+                .formLogin().loginPage("/public/login")//.defaultSuccessUrl("/public/admin/index",true).usernameParameter("userName").passwordParameter("passWord")
+               .permitAll()
                 //.formLogin().loginPage("/public/login").defaultSuccessUrl("/public/admin/index").permitAll().and().logout().permitAll()
                 .and()
                 .authorizeRequests()

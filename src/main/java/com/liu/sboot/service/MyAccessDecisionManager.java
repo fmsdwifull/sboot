@@ -43,6 +43,7 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
 
 
     @Override
+    //默认的decide 先循环获vote，然后再vote里面去判断，看了两天没看懂怎么回事，为什么设置成permitAll就返回1，不设置为-1，实在没看懂，以后有兴趣再看吧，没兴趣就以解决问题为中心，这种花了时间和精力，收益甚微的事就算了
     public void decide(Authentication authentication, Object object,
                        Collection<ConfigAttribute> configAttributes)
             throws AccessDeniedException, InsufficientAuthenticationException {
